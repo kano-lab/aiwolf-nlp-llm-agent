@@ -14,7 +14,7 @@ class Prompt:
     
     @classmethod
     def get_talk_prompt(cls, talk_history:TalkList) -> str:
-        talk_history_text = "\n".join(talk_history)
+        talk_history_text = "\n".join([f"{talk.agent}:{talk.text}" for talk in talk_history])
         return f"""
         以下は今までの会話履歴です。会話に次ぐ発言をしてください。
         {talk_history_text}
