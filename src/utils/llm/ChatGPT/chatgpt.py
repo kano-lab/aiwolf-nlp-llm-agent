@@ -56,7 +56,7 @@ class ChatGPT:
 
     @classmethod
     def load_api_key(cls, config: configparser.ConfigParser) -> None:
-        api_key_path: str = config.get("ChatGPT", "api_key_path")
+        api_key_path: str = config.get("path", "api_key_path")
 
         if Path(api_key_path).exists():
             raise FileNotFoundError(api_key_path, "APIの設定ファイルが見つかりません")
