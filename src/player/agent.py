@@ -151,7 +151,8 @@ class Agent:
         try:
             self.model.add_user_message(content=Prompt.get_talk_prompt(talk_history=self.talk_history))
             comment = self.model.create_comment()
-        except Exception:
+        except Exception as e:
+            self.agent_log.error_message(error_message=str(e))
             comment = "私は村人です！"
 
         if self.agent_log is not None:
