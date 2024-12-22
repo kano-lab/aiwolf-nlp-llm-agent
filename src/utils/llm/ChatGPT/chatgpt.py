@@ -30,16 +30,17 @@ class ChatGPT:
     def __init__(self, config: configparser.ConfigParser) -> None:
         # ChatGPT settings
         self.model: str = config.get(self.__config_key, "model")
-        self.frequency_penalty: float = config.getfloat(self.__config_key, "frequency_penalty")
+        self.frequency_penalty: float = config.getfloat(self.__config_key, "frequency_penalty", fallback=None)
         self.max_completion_tokens: int = config.getint(
             self.__config_key,
             "max_completion_tokens",
+            fallback=None
         )
-        self.n: int = config.getint(self.__config_key, "n")
-        self.presence_penalty: float = config.getfloat(self.__config_key, "presence_penalty")
-        self.seed: int = config.getint(self.__config_key, "seed")
-        self.temperature: float = config.getfloat(self.__config_key, "temperature")
-        self.top_p: float = config.getfloat(self.__config_key, "top_p")
+        self.n: int = config.getint(self.__config_key, "n", fallback=None)
+        self.presence_penalty: float = config.getfloat(self.__config_key, "presence_penalty", fallback=None)
+        self.seed: int = config.getint(self.__config_key, "seed", fallback=None)
+        self.temperature: float = config.getfloat(self.__config_key, "temperature", fallback=None)
+        self.top_p: float = config.getfloat(self.__config_key, "top_p", fallback=None)
 
         self.messages: list[
             ChatCompletionDeveloperMessageParam
