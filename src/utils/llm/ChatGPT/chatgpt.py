@@ -25,21 +25,21 @@ if TYPE_CHECKING:
 
 class ChatGPT:
     # init file key
-    __inifile_key = "ChatGPT"
+    __config_key = "ChatGPT"
 
-    def __init__(self, inifile: configparser.ConfigParser) -> None:
+    def __init__(self, config: configparser.ConfigParser) -> None:
         # ChatGPT settings
-        self.model: str = inifile.get(self.__inifile_key, "model")
-        self.frequency_penalty: float = inifile.getfloat(self.__inifile_key, "frequency_penalty")
-        self.max_completion_tokens: int = inifile.getint(
-            self.__inifile_key,
+        self.model: str = config.get(self.__config_key, "model")
+        self.frequency_penalty: float = config.getfloat(self.__config_key, "frequency_penalty")
+        self.max_completion_tokens: int = config.getint(
+            self.__config_key,
             "max_completion_tokens",
         )
-        self.n: int = inifile.getint(self.__inifile_key, "n")
-        self.presence_penalty: float = inifile.getfloat(self.__inifile_key, "presence_penalty")
-        self.seed: int = inifile.getint(self.__inifile_key, "seed")
-        self.temperature: float = inifile.getfloat(self.__inifile_key, "temperature")
-        self.top_p: float = inifile.getfloat(self.__inifile_key, "top_p")
+        self.n: int = config.getint(self.__config_key, "n")
+        self.presence_penalty: float = config.getfloat(self.__config_key, "presence_penalty")
+        self.seed: int = config.getint(self.__config_key, "seed")
+        self.temperature: float = config.getfloat(self.__config_key, "temperature")
+        self.top_p: float = config.getfloat(self.__config_key, "top_p")
 
         self.messages: list[
             ChatCompletionDeveloperMessageParam
@@ -50,12 +50,12 @@ class ChatGPT:
         ] = []
         self.token_model = tiktoken.encoding_for_model(model_name=self.model)
 
-        self.load_api_key(inifile=inifile)
+        self.load_api_key(config=config)
         self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
     @classmethod
-    def load_api_key(cls, inifile: configparser.ConfigParser) -> None:
-        api_key_path: str = inifile.get("ChatGPT", "api_key_path")
+    def load_api_key(cls, config: configparser.ConfigParser) -> None:
+        api_key_path: str = config.get("ChatGPT", "api_key_path")
 
         if Path(api_key_path).exists():
             raise FileNotFoundError(api_key_path, "APIの設定ファイルが見つかりません")

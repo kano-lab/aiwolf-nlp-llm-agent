@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 
 class AIWolfNLPGPT(ChatGPT):
-    def __init__(self, inifile: configparser.ConfigParser) -> None:
-        super().__init__(inifile=inifile)
+    def __init__(self, config: configparser.ConfigParser) -> None:
+        super().__init__(config=config)
 
     def set_action_time_out(self, action_timeout: int) -> None:
         self.client.timeout = action_timeout
