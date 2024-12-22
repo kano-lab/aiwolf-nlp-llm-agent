@@ -152,3 +152,7 @@ class ChatGPT:
         )
 
         return self.client.chat.completions.create(**chatgpt_args)
+    
+    def close(self) -> None:
+        if hasattr(self, "client"):
+            self.client.close()
