@@ -141,3 +141,7 @@ class AgentLog(Log):
     @print_header_decorator
     def daily_finish(self) -> None:
         pass
+
+    @print_header_decorator
+    def error(self, error_message:str) -> None:
+        self.info(error_message)
