@@ -58,7 +58,7 @@ class ChatGPT:
     def load_api_key(cls, config: configparser.ConfigParser) -> None:
         api_key_path: str = config.get("path", "api_key_path")
 
-        if Path(api_key_path).exists():
+        if not Path(api_key_path).is_file():
             raise FileNotFoundError(api_key_path, "APIの設定ファイルが見つかりません")
 
         load_dotenv(api_key_path)
