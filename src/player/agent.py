@@ -181,6 +181,7 @@ class Agent:
 
     def finish(self) -> None:
         self.running = False
+        self.model.close()
 
         if self.agent_log is not None and self.agent_log.is_write:
             self.agent_log.close()
