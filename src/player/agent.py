@@ -149,8 +149,10 @@ class Agent:
                 self.talk_history.extend(self.packet.talk_history)
 
         try:
-            self.model.add_user_message(content=Prompt.get_talk_prompt(talk_history=self.talk_history))
+            talk_prompt = Prompt.get_talk_prompt(talk_history=self.talk_history)
+            self.model.add_user_message(content=talk_prompt)
             comment = self.model.create_comment()
+            self.agent_log.prompt(prompt_text=talk_prompt)
         except Exception as e:
             self.agent_log.error_message(error_message=str(e))
             comment = "私は村人です！"
