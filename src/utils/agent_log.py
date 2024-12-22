@@ -143,5 +143,5 @@ class AgentLog(Log):
         pass
 
     @print_header_decorator
-    def error(self, error_message:str) -> None:
+    def error_message(self, error_message:str) -> None:
         self.info(error_message)
