@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from typing import TYPE_CHECKING
 
+from res.prompt import Prompt
 from utils import agent_util
+from utils.llm.ChatGPT.aiwolf_nlp_gpt import AIWolfNLPGPT
 
 if TYPE_CHECKING:
     import configparser
@@ -36,7 +37,6 @@ class Agent:
         self.name: str = name if name is not None else ""
         self.index: int = -1
         self.received: list[str] = []
-        self.comments: list[str] = []
         self.role: Role = RoleInfo.VILLAGER.value
         self.action_timeout: int = 0
         self.packet: Packet | None = None
@@ -46,12 +46,9 @@ class Agent:
         self.whisper_history: WhisperList | None = None
         self.agent_log = agent_log
         self.running: bool = True
+
         if config is not None:
-            with Path.open(
-                Path(config.get("path", "random_talk")),
-                encoding="utf-8",
-            ) as f:
-                self.comments = f.read().splitlines()
+            self.model = AIWolfNLPGPT(config=config)
 
     @staticmethod
     def timeout(func: Callable) -> Callable:
@@ -114,6 +111,9 @@ class Agent:
         self.action_timeout = self.setting.action_timeout
         self.role = self.info.role_map.get_role(agent=self.info.agent)
 
+        self.model.set_action_time_out(action_timeout=self.action_timeout)
+        self.model.add_developer_message(content=Prompt.get_common_prompt(agent_name=self.info.agent, role=self.role))
+
     def daily_initialize(self) -> None:
         if self.packet is not None:
             self.setting = self.packet.setting
@@ -147,7 +147,13 @@ class Agent:
                 self.talk_history = self.packet.talk_history
             elif self.packet.talk_history is not None:
                 self.talk_history.extend(self.packet.talk_history)
-        comment = random.choice(self.comments)  # noqa: S311
+
+        try:
+            self.model.add_user_message(content=Prompt.get_talk_prompt(talk_history=self.talk_history))
+            comment = self.model.create_comment()
+        except Exception:
+            comment = "私は村人です！"
+
         if self.agent_log is not None:
             self.agent_log.talk(comment=comment)
         return comment
@@ -202,9 +208,9 @@ class Agent:
 
     def transfer_state(self, prev_agent: Agent) -> None:
         self.name = prev_agent.name
+        self.model = prev_agent.model
         self.index = prev_agent.index
         self.received = prev_agent.received
-        self.comments = prev_agent.comments
         self.role = prev_agent.role
         self.action_timeout = prev_agent.action_timeout
         self.packet = prev_agent.packet
