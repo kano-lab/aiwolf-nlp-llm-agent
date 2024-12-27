@@ -268,3 +268,5 @@ $RECYCLE.BIN/
 
 config.ini
 log.ini
+chatgpt.ini
+gemini.ini
