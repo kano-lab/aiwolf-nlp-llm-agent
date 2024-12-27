@@ -81,5 +81,5 @@ class Gemini:
 
         load_dotenv(api_key_path)
 
-    def create_message(self, content: content_types.ContentType) -> GenerateContentResponse:
+    def create_comment(self, content: content_types.ContentType) -> GenerateContentResponse:
         return self.chat.send_message(content=content, generation_config=self.optional_config)
