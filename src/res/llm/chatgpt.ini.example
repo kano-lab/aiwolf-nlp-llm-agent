@@ -1,9 +1,9 @@
 [params]
 model = gpt-3.5-turbo
-frequency_penalty =
-max_completion_tokens = 
-n = 
-presence_penalty = 
-seed = 
-temperature = 
-top_p = 
+# frequency_penalty =
+# max_completion_tokens = 
+# n = 
+# presence_penalty = 
+# seed = 
+# temperature = 
+# top_p = 
