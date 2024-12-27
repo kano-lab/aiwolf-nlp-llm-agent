@@ -108,10 +108,12 @@ class Agent:
         self.action_timeout = self.setting.action_timeout
         self.role = self.info.role_map.get_role(agent=self.info.agent)
 
+        system_instruction=Prompt.get_common_prompt(agent_name=self.info.agent, role=self.role)
         self.model = agent_util.set_model(
             config=config,
-            system_instruction=Prompt.get_common_prompt(agent_name=self.info.agent, role=self.role),
+            system_instruction=system_instruction,
         )
+        self.agent_log.prompt(prompt_text=system_instruction)
 
         if type(self.model) is AIWolfNLPChatGPT:
             self.model.set_action_time_out(action_timeout=self.action_timeout)
