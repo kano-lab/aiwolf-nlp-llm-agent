@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import configparser
 import os
+from dataclasses import asdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -9,10 +11,9 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from .message_role import MessageRole
+from .optional_params import OptionalParams
 
 if TYPE_CHECKING:
-    import configparser
-
     from openai.types.chat import (
         ChatCompletion,
         ChatCompletionAssistantMessageParam,
@@ -26,30 +27,35 @@ if TYPE_CHECKING:
 
 class ChatGPT:
     # init file key
-    __config_key = "ChatGPT"
+    __config_key = "params"
 
     def __init__(self, config: configparser.ConfigParser) -> None:
-        # ChatGPT settings
-        self.model: str = config.get(self.__config_key, "model")
-        self.frequency_penalty: float = config.getfloat(
-            self.__config_key,
-            "frequency_penalty",
-            fallback=None,
+        self.load_api_key(config=config)
+        chatgpt_config = self.read_config(config=config)
+
+        self.model: str = chatgpt_config.get(self.__config_key, "model")
+
+        self.optional_params: OptionalParams = OptionalParams(
+            frequency_penalty=chatgpt_config.getfloat(
+                self.__config_key,
+                "frequency_penalty",
+                fallback=None,
+            ),
+            max_completion_tokens=chatgpt_config.getint(
+                self.__config_key,
+                "max_completion_tokens",
+                fallback=None,
+            ),
+            n=chatgpt_config.getint(self.__config_key, "n", fallback=None),
+            presence_penalty=chatgpt_config.getfloat(
+                self.__config_key,
+                "presence_penalty",
+                fallback=None,
+            ),
+            seed=chatgpt_config.getint(self.__config_key, "seed", fallback=None),
+            temperature=chatgpt_config.getfloat(self.__config_key, "temperature", fallback=None),
+            top_p=chatgpt_config.getfloat(self.__config_key, "top_p", fallback=None),
         )
-        self.max_completion_tokens: int = config.getint(
-            self.__config_key,
-            "max_completion_tokens",
-            fallback=None,
-        )
-        self.n: int = config.getint(self.__config_key, "n", fallback=None)
-        self.presence_penalty: float = config.getfloat(
-            self.__config_key,
-            "presence_penalty",
-            fallback=None,
-        )
-        self.seed: int = config.getint(self.__config_key, "seed", fallback=None)
-        self.temperature: float = config.getfloat(self.__config_key, "temperature", fallback=None)
-        self.top_p: float = config.getfloat(self.__config_key, "top_p", fallback=None)
 
         self.messages: list[
             ChatCompletionDeveloperMessageParam
@@ -61,8 +67,19 @@ class ChatGPT:
         ] = []
         self.token_model = tiktoken.encoding_for_model(model_name=self.model)
 
-        self.load_api_key(config=config)
         self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+    @classmethod
+    def read_config(cls, config: configparser.ConfigParser) -> configparser.ConfigParser:
+        chatgpt_config_path: str = config.get("path", "chatgpt_config")
+
+        if not Path(chatgpt_config_path).is_file():
+            raise FileNotFoundError(chatgpt_config_path, "ChatGPTの設定ファイルが見つかりません")
+
+        chatgpt_config = configparser.ConfigParser()
+        chatgpt_config.read(chatgpt_config_path, encoding="utf-8")
+
+        return chatgpt_config
 
     @classmethod
     def load_api_key(cls, config: configparser.ConfigParser) -> None:
@@ -160,17 +177,12 @@ class ChatGPT:
             "messages": self.messages,
         }
 
-        optional_args = {
-            "frequency_penalty": self.frequency_penalty,
-            "max_completion_tokens": self.max_completion_tokens,
-            "n": self.n,
-            "presence_penalty": self.presence_penalty,
-            "seed": self.seed,
-            "temperature": self.temperature,
-            "top_p": self.top_p,
-        }
         chatgpt_args.update(
-            {key: value for key, value in optional_args.items() if value is not None},
+            {
+                key: value
+                for key, value in asdict(self.optional_params).items()
+                if value is not None
+            },
         )
 
         return self.client.chat.completions.create(**chatgpt_args)
