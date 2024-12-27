@@ -26,7 +26,7 @@ class Gemini:
 
         self.model: str = gemini_config.get(self.__config_key, "model")
 
-        self.optional_config: GenerationConfig = GenerationConfig(
+        self.optional_params: GenerationConfig = GenerationConfig(
             candidate_count=gemini_config.getint(
                 self.__config_key,
                 "candidate_count",
@@ -84,7 +84,7 @@ class Gemini:
     def create_comment(self, content: content_types.ContentType) -> str:
         response: GenerateContentResponse = self.chat.send_message(
             content=content,
-            generation_config=self.optional_config,
+            generation_config=self.optional_params,
         )
 
         return response.text
