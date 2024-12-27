@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 
     from openai.types.chat import (
         ChatCompletion,
+        ChatCompletionAssistantMessageParam,
         ChatCompletionDeveloperMessageParam,
         ChatCompletionFunctionMessageParam,
         ChatCompletionSystemMessageParam,
@@ -30,14 +31,22 @@ class ChatGPT:
     def __init__(self, config: configparser.ConfigParser) -> None:
         # ChatGPT settings
         self.model: str = config.get(self.__config_key, "model")
-        self.frequency_penalty: float = config.getfloat(self.__config_key, "frequency_penalty", fallback=None)
+        self.frequency_penalty: float = config.getfloat(
+            self.__config_key,
+            "frequency_penalty",
+            fallback=None,
+        )
         self.max_completion_tokens: int = config.getint(
             self.__config_key,
             "max_completion_tokens",
-            fallback=None
+            fallback=None,
         )
         self.n: int = config.getint(self.__config_key, "n", fallback=None)
-        self.presence_penalty: float = config.getfloat(self.__config_key, "presence_penalty", fallback=None)
+        self.presence_penalty: float = config.getfloat(
+            self.__config_key,
+            "presence_penalty",
+            fallback=None,
+        )
         self.seed: int = config.getint(self.__config_key, "seed", fallback=None)
         self.temperature: float = config.getfloat(self.__config_key, "temperature", fallback=None)
         self.top_p: float = config.getfloat(self.__config_key, "top_p", fallback=None)
@@ -48,6 +57,7 @@ class ChatGPT:
             | ChatCompletionUserMessageParam
             | ChatCompletionToolMessageParam
             | ChatCompletionFunctionMessageParam
+            | ChatCompletionAssistantMessageParam
         ] = []
         self.token_model = tiktoken.encoding_for_model(model_name=self.model)
 
@@ -92,6 +102,14 @@ class ChatGPT:
         return new_message
 
     @classmethod
+    def make_assistant_message_param(cls, content: str) -> ChatCompletionAssistantMessageParam:
+        new_message: ChatCompletionAssistantMessageParam = {
+            "content": content,
+            "role": MessageRole.ASSISTANT.value,
+        }
+        return new_message
+
+    @classmethod
     def make_tool_message_param(cls, content: str) -> ChatCompletionToolMessageParam:
         new_message: ChatCompletionToolMessageParam = {
             "content": content,
@@ -113,7 +131,8 @@ class ChatGPT:
         | ChatCompletionSystemMessageParam
         | ChatCompletionUserMessageParam
         | ChatCompletionToolMessageParam
-        | ChatCompletionFunctionMessageParam,
+        | ChatCompletionFunctionMessageParam
+        | ChatCompletionAssistantMessageParam,
     ) -> None:
         self.messages.append(message)
 
@@ -125,6 +144,9 @@ class ChatGPT:
 
     def add_user_message(self, content: str) -> None:
         self.add_message(message=self.make_user_message_param(content=content))
+
+    def add_assistant_message(self, content: str) -> None:
+        self.add_message(message=self.make_assistant_message_param(content=content))
 
     def add_tool_message(self, content: str) -> None:
         self.add_message(message=self.make_tool_message_param(content=content))
@@ -152,7 +174,7 @@ class ChatGPT:
         )
 
         return self.client.chat.completions.create(**chatgpt_args)
-    
+
     def close(self) -> None:
         if hasattr(self, "client"):
             self.client.close()
