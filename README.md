@@ -51,7 +51,12 @@
     cp src/res/llm/chatgpt.ini.example src/res/llm/chatgpt.ini
     cp src/res/llm/gemini.ini.example src/res/llm/gemini.ini
     ```
-1. OpenAIのAPIキーを`src/res/.env`ファイルに記述する(ChatGPTを使用する場合)
+1. OpenAIのAPIキーを`src/res/.env`ファイル内の`OPENAI_API_KEY`に記述する(ChatGPTを使用する場合)
+    
+    APIキーは[OpenAI Platform](https://platform.openai.com/docs/overview)から作成することができます。
+1. GeminiのAPIキーを`src/res/.env`ファイル内の`GEMINI_API_KEY`に記述する(Geminiを使用する場合)
+    
+    APIキーは[Google AI for Developers](https://ai.google.dev/gemini-api/docs?hl=ja)の、`Gemini APIキーを取得する`から作成することができます。
 
 ## ChatGPTの設定について
 APIで使用可能な設定の内、一部のみ`src/utils/llm/ChatGPT/chatgpt.py`に記述してあります。詳細は以下のリファレンスをご参照ください。
