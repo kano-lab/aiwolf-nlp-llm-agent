@@ -18,7 +18,7 @@ class Gemini:
     def __init__(
         self,
         config: configparser.ConfigParser,
-        system_instruction: content_types.ContentType = "",
+        system_instruction: content_types.ContentType = None,
     ) -> None:
         self.load_api_key(config=config)
         gemini_config = self.read_config(config=config)
