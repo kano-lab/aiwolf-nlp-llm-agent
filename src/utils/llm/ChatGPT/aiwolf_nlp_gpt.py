@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from openai.types.chat import ChatCompletion
 
 
-class AIWolfNLPGPT(ChatGPT):
+class AIWolfNLPChatGPT(ChatGPT):
     def __init__(self, config: configparser.ConfigParser) -> None:
         super().__init__(config=config)
 
