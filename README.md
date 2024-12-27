@@ -6,17 +6,28 @@
 ## 構成
 [aiwolf-nlp-agent](https://github.com/kano-lab/aiwolf-nlp-agent)との差分の構成を記述します。
 ```.
+.
 └── src
     ├── res
     │   ├── __init__.py
+    │   ├── config.ini.example
     │   ├── env.example
+    │   ├── llm
+    │   │   ├── chatgpt.ini.example
+    │   │   └── gemini.ini.example
     │   └── prompt.py
     └── utils
+        ├── agent_util.py
         └── llm
-            └── ChatGPT
+            ├── ChatGPT
+            │   ├── __init__.py
+            │   ├── aiwolf_nlp_gpt.py
+            │   ├── chatgpt.py
+            │   ├── message_role.py
+            │   └── optional_params.py
+            └── Gemini
                 ├── __init__.py
-                ├── aiwolf_nlp_gpt.py
-                ├── chatgpt.py
+                ├── gemini.py
                 └── message_role.py
 ```
 
@@ -37,6 +48,8 @@
 1. 以下のコマンドの実行
     ```
     cp src/res/env.example src/res/.env
+    cp src/res/llm/chatgpt.ini.example src/res/llm/chatgpt.ini
+    cp src/res/llm/gemini.ini.example src/res/llm/gemini.ini
     ```
 1. OpenAIのAPIキーを`src/res/.env`ファイルに記述する(ChatGPTを使用する場合)
 
@@ -44,3 +57,7 @@
 APIで使用可能な設定の内、一部のみ`src/utils/llm/ChatGPT/chatgpt.py`に記述してあります。詳細は以下のリファレンスをご参照ください。
 
 [API reference](https://platform.openai.com/docs/api-reference/chat)
+
+
+## Geminiの設定について
+[API reference](https://ai.google.dev/api/generate-content?hl=ja#generationconfig)
