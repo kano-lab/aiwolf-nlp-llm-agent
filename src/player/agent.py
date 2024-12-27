@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from res.prompt import Prompt
 from utils import agent_util
-from utils.llm.ChatGPT.aiwolf_nlp_gpt import AIWolfNLPGPT
+from utils.llm.ChatGPT import AIWolfNLPChatGPT
 
 if TYPE_CHECKING:
     import configparser
@@ -30,7 +30,6 @@ from aiwolf_nlp_common.role import RoleInfo
 class Agent:
     def __init__(
         self,
-        config: configparser.ConfigParser | None = None,
         name: str | None = None,
         agent_log: AgentLog | None = None,
     ) -> None:
@@ -46,9 +45,6 @@ class Agent:
         self.whisper_history: WhisperList | None = None
         self.agent_log = agent_log
         self.running: bool = True
-
-        if config is not None:
-            self.model = AIWolfNLPGPT(config=config)
 
     @staticmethod
     def timeout(func: Callable) -> Callable:
@@ -101,18 +97,24 @@ class Agent:
         else:
             self.packet.update(value=value)
 
-    def initialize(self) -> None:
+    def initialize(self, config: configparser.ConfigParser) -> None:
         if self.packet is not None:
             self.setting = self.packet.setting
 
         if self.info is None or self.setting is None:
             return
+
         self.index = agent_util.agent_name_to_idx(name=self.info.agent)
         self.action_timeout = self.setting.action_timeout
         self.role = self.info.role_map.get_role(agent=self.info.agent)
 
-        self.model.set_action_time_out(action_timeout=self.action_timeout)
-        self.model.add_developer_message(content=Prompt.get_common_prompt(agent_name=self.info.agent, role=self.role))
+        self.model = agent_util.set_model(
+            config=config,
+            system_instruction=Prompt.get_common_prompt(agent_name=self.info.agent, role=self.role),
+        )
+
+        if type(self.model) is AIWolfNLPChatGPT:
+            self.model.set_action_time_out(action_timeout=self.action_timeout)
 
     def daily_initialize(self) -> None:
         if self.packet is not None:
@@ -150,8 +152,7 @@ class Agent:
 
         try:
             talk_prompt = Prompt.get_talk_prompt(talk_history=self.talk_history)
-            self.model.add_user_message(content=talk_prompt)
-            comment = self.model.create_comment()
+            comment = self.model.create_comment(content=talk_prompt)
             self.agent_log.prompt(prompt_text=talk_prompt)
         except Exception as e:
             self.agent_log.error_message(error_message=str(e))
@@ -181,17 +182,19 @@ class Agent:
 
     def finish(self) -> None:
         self.running = False
-        self.model.close()
+
+        if type(self.model) is AIWolfNLPChatGPT:
+            self.model.close()
 
         if self.agent_log is not None and self.agent_log.is_write:
             self.agent_log.close()
 
-    def action(self) -> str:  # noqa: C901
+    def action(self, config: configparser.ConfigParser) -> str:  # noqa: C901
         if self.packet is None:
             return ""
         self.info = self.packet.info
         if Action.is_initialize(request=self.packet.request):
-            self.initialize()
+            self.initialize(config=config)
         elif Action.is_name(request=self.packet.request):
             return self.get_name()
         elif Action.is_role(request=self.packet.request):
