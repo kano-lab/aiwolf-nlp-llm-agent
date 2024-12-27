@@ -50,7 +50,6 @@ def run_agent(
             sleep(15)
 
     agent = player.agent.Agent(
-        config=config,
         name=name,
         agent_log=AgentLog(config=config, agent_name=name, log_info=log_info),
     )
@@ -60,7 +59,7 @@ def run_agent(
             if isinstance(receive, (str, list)):
                 agent.append_recv(recv=receive)
         agent.set_packet()
-        req = agent.action()
+        req = agent.action(config=config)
         if agent.packet is None:
             continue
         if Action.is_initialize(request=agent.packet.request):
