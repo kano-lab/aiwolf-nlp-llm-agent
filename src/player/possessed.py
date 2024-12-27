@@ -43,5 +43,5 @@ class Possessed(Agent):
     def whisper(self) -> None:
         return super().whisper()
 
-    def action(self) -> str:
-        return super().action()
+    def action(self, config):
+        return super().action(config)

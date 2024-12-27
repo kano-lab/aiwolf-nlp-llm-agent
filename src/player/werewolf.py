@@ -58,9 +58,9 @@ class Werewolf(Agent):
             self.agent_log.attack(attack_target=target)
         return target
 
-    def action(self) -> str:
+    def action(self, config):
         if self.packet is not None:
             self.info = self.packet.info
             if Action.is_attack(request=self.packet.request):
                 return self.attack()
-        return super().action()
+        return super().action(config=config)

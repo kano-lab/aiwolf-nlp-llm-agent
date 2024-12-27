@@ -58,9 +58,9 @@ class Seer(Agent):
             self.agent_log.divine(divine_target=target)
         return target
 
-    def action(self) -> str:
+    def action(self, config):
         if self.packet is not None:
             self.info = self.packet.info
             if Action.is_divine(request=self.packet.request):
                 return self.divine()
-        return super().action()
+        return super().action(config=config)
