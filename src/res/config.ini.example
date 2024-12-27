@@ -15,9 +15,12 @@ name3 = kanolab3
 name4 = kanolab4
 name5 = kanolab5
 
-[ChatGPT]
-model = gpt-3.5-turbo
+[model]
+ChatGPT = false
+Gemini = true
 
 [path]
 api_key_path = ./src/res/.env
+chatgpt_config = ./src/res/llm/chatgpt.ini
+gemini_config = ./src/res/llm/gemini.ini
 log_config = ./src/res/log.ini
