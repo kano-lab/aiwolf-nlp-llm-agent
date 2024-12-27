@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import configparser
+import os
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -25,7 +26,7 @@ class Gemini:
 
         self.model: str = gemini_config.get(self.__config_key, "model")
 
-        self.optional_args: GenerationConfig = GenerationConfig(
+        self.optional_config: GenerationConfig = GenerationConfig(
             candidate_count=gemini_config.getint(
                 self.__config_key,
                 "candidate_count",
@@ -52,9 +53,9 @@ class Gemini:
             ),
         )
 
+        genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
         self.client = genai.GenerativeModel(
             model_name=self.model,
-            generation_config=self.optional_args,
             system_instruction=system_instruction,
         )
         self.chat = self.client.start_chat(history=[])
@@ -80,5 +81,5 @@ class Gemini:
 
         load_dotenv(api_key_path)
 
-    def create_message(self) -> GenerateContentResponse:
-        return self.chat.send_message()
+    def create_message(self, content: content_types.ContentType) -> GenerateContentResponse:
+        return self.chat.send_message(content=content, generation_config=self.optional_config)
