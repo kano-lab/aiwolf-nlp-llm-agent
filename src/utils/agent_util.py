@@ -1,6 +1,9 @@
 import re
 
+import configparser
 from aiwolf_nlp_common.role import RoleInfo
+from utils.llm.Gemini import Gemini
+from utils.llm.ChatGPT import AIWolfNLPChatGPT
 
 import player
 
@@ -22,6 +25,12 @@ def set_role(
     agent.transfer_state(prev_agent=prev_agent)
     return agent
 
+def set_model(config: configparser.ConfigParser, system_instruction:str) -> AIWolfNLPChatGPT | Gemini:
+
+    if config.getboolean("model", "ChatGPT", fallback=False):
+        return AIWolfNLPChatGPT(config=config, system_instruction=system_instruction)
+    
+    return Gemini(config=config, system_instruction=system_instruction)
 
 def agent_name_to_idx(name: str) -> int:
     match = re.search(r"\d+", name)
