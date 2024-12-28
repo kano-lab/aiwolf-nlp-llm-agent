@@ -34,16 +34,6 @@
                 └── message_role.py
 ```
 
-## プロンプトの変更方法
-`src/res/prompt.py`の内容を変更することで与えるプロンプトを変更することができます。詳細は以下に記述します。
-
-### [src/res/prompt.py]
-`get_common_prompt`: 全命令に共通する内容を記述しているプロンプトです。(`src/player/agent.py`の`initialize`で設定しています。
-)
-
-`get_talk_prompt`: `talk`の際に命令する内容を記述しているプロンプトです。(`src/player/agent.py`の`talk`で設定しています。
-)
-
 
 ## 環境構築
 [aiwolf-nlp-agent](https://github.com/kano-lab/aiwolf-nlp-agent)の環境構築に加え、以下の内容を実行してください。
@@ -60,6 +50,16 @@
 1. GeminiのAPIキーを`src/res/.env`ファイル内の`GEMINI_API_KEY`に記述する(Geminiを使用する場合)
     
     APIキーは[Google AI for Developers](https://ai.google.dev/gemini-api/docs?hl=ja)の、`Gemini APIキーを取得する`から作成することができます。
+
+## プロンプトの変更方法
+`src/res/prompt.py`の内容を変更することで与えるプロンプトを変更することができます。詳細は以下に記述します。
+
+### [src/res/prompt.py]
+`get_common_prompt`: 全命令に共通する内容を記述しているプロンプトです。(`src/player/agent.py`の`initialize`で設定しています。
+)
+
+`get_talk_prompt`: `talk`の際に命令する内容を記述しているプロンプトです。(`src/player/agent.py`の`talk`で設定しています。
+)
 
 ## ChatGPTの設定について
 APIで使用可能な設定の内、一部のみ`src/utils/llm/ChatGPT/chatgpt.py`に記述してあります。詳細は以下のリファレンスをご参照ください。
