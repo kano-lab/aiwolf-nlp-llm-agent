@@ -1,7 +1,10 @@
 # aiwolf-nlp-llm-agent
-
-人狼知能コンテスト(自然言語部門)の生成AIを使用したサンプルエージェントです。\
+人狼知能コンテスト(自然言語部門)の生成AI(ChatGPT, Gemini)を使用したサンプルエージェントです。\
 このプログラムは[aiwolf-nlp-agent](https://github.com/kano-lab/aiwolf-nlp-agent)をベースにしているため、実行方法などの詳細はこちらをご覧ください。
+
+## 対象者
+* 人狼知能コンテスト(自然言語部門)に興味はあるが、何から手をつければ良いかわからない方
+* 人狼知能コンテスト(自然言語部門)に参加する予定で、ChatGPT,Geminiを使用する予定の方
 
 ## 構成
 [aiwolf-nlp-agent](https://github.com/kano-lab/aiwolf-nlp-agent)との差分の構成を記述します。
