@@ -61,6 +61,45 @@
 `get_talk_prompt`: `talk`の際に命令する内容を記述しているプロンプトです。(`src/player/agent.py`の`talk`で設定しています。
 )
 
+## 生成AIのパラメータの変更方法
+
+### ChatGPT
+`src/res/llm/chatgpt.ini`に以下のような内容でパラメータを設定するファイルが存在します。\
+`model`は必須項目であり、他の項目は任意です。\
+使用する項目はコメントアウトを外し、値を設定してご使用ください。\
+それぞれのパラメータの値や意味については[API reference](https://platform.openai.com/docs/api-reference/chat)をご確認ください。
+
+```sh
+[params]
+model = gpt-3.5-turbo
+# frequency_penalty =
+# max_completion_tokens = 
+# n = 
+# presence_penalty = 
+# seed = 
+# temperature = 
+# top_p = 
+```
+
+### Gemini
+`src/res/llm/gemini.ini`に以下のような内容でパラメータを設定するファイルが存在します。\
+`model`は必須項目であり、他の項目は任意です。\
+使用する項目はコメントアウトを外し、値を設定してご使用ください。\
+それぞれのパラメータの値や意味については[API reference](https://ai.google.dev/api/generate-content?hl=ja#generationconfig)をご確認ください。
+
+```sh
+[params]
+model = gemini-1.5-flash
+# candidate_count = 
+# max_output_tokens = 
+# temperature = 
+# top_p = 
+# top_k = 
+# seed = 
+# presence_penalty = 
+# requency_penalty = 
+```
+
 ## ChatGPTの設定について
 APIで使用可能な設定の内、一部のみ`src/utils/llm/ChatGPT/chatgpt.py`に記述してあります。詳細は以下のリファレンスをご参照ください。
 
