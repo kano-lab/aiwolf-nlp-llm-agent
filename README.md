@@ -4,7 +4,7 @@
 
 ## 対象者
 * 人狼知能コンテスト(自然言語部門)に興味はあるが、何から手をつければ良いかわからない方
-* 人狼知能コンテスト(自然言語部門)に参加する予定で、ChatGPT,Geminiを使用する予定の方
+* 人狼知能コンテスト(自然言語部門)に参加する予定で、ChatGPT, Geminiを使用する予定の方
 
 ## 構成
 [aiwolf-nlp-agent](https://github.com/kano-lab/aiwolf-nlp-agent)との差分の構成を記述します。
