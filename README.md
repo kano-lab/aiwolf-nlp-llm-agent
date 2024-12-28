@@ -61,6 +61,23 @@
 `get_talk_prompt`: `talk`の際に命令する内容を記述しているプロンプトです。(`src/player/agent.py`の`talk`で設定しています。
 )
 
+## 使用する生成AIの変更方法
+`src/res/config.ini`の`[model]`セクションには、使用するモデルに関する設定が記載されています。デフォルトではGeminiが有効になっており、ChatGPTは無効になっています。この設定を変更することで、利用するモデルを切り替えることができます。
+
+例えば、以下のような記述になっています。
+
+```ini
+(省略)
+
+[model]
+ChatGPT = false
+Gemini = true
+
+(省略)
+```
+
+ChatGPTを使用したい場合は、ChatGPTをtrueに、Geminiをfalseに変更してください。
+
 ## 生成AIのパラメータの変更方法
 
 ### ChatGPT
