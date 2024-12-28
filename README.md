@@ -6,6 +6,10 @@
 * 人狼知能コンテスト(自然言語部門)に興味はあるが、何から手をつければ良いかわからない方
 * 人狼知能コンテスト(自然言語部門)に参加する予定で、ChatGPT, Geminiを使用する予定の方
 
+2024年12月28日現在、`Gemini`のAPIは無料で使用することができるため、まずはこちらを使用して試すことをお勧めします。\
+無料のAPIはレート制限が厳しい場合があるので、一度制限の内容を確認することもお勧めします。\
+[Geminiの料金モデル](https://ai.google.dev/pricing?hl=ja#1_5flash)
+
 ## 構成
 [aiwolf-nlp-agent](https://github.com/kano-lab/aiwolf-nlp-agent)との差分の構成を記述します。
 ```.
